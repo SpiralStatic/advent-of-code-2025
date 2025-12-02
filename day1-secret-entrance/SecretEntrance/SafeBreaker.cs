@@ -11,27 +11,42 @@ public partial class SafeBreaker
 
   public static int SolveSafePassword(List<string> rotations)
   {
-    var (lTotalDistanc, rTotalDistance) = rotations.Aggregate((0, 0), (total, next) =>
+    var clicks = CalculateDialClicks(rotations);
+
+    return clicks;
+  }
+
+  private static int CalculateDialClicks(List<string> rotations)
+  {
+    var (_, clicks) = rotations.Aggregate((50, 0), (current, next) =>
     {
       var directionDistance = RotationsRegex().Split(next);
 
       var (direction, distance) = CreateDirectionDistanceTuple(directionDistance);
 
-      var (lTotal, rTotal) = total;
+      var (currentDialPosition, currentClicks) = current;
 
       if (direction == 'L')
       {
-        return (lTotal + distance, rTotal);
+        var nextDialPosition = currentDialPosition - distance;
+        if (nextDialPosition < 0)
+        {
+          return (0 - nextDialPosition, currentClicks + 1);
+        }
+        return (nextDialPosition, currentClicks);
       }
       else
       {
-        return (lTotal, rTotal + distance);
+        var nextDialPosition = currentDialPosition + distance;
+        if (nextDialPosition > 99)
+        {
+          return (nextDialPosition, currentClicks + 1);
+        }
+        return (99 + nextDialPosition, currentClicks);
       }
     });
 
-    var dial = 50 - lTotalDistanc + rTotalDistance;
-
-    return dial;
+    return clicks;
   }
 
   private static (char, int) CreateDirectionDistanceTuple(string[] directionDistance)
