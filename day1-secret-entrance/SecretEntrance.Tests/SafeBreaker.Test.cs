@@ -109,4 +109,23 @@ public class Tests
     Assert.That(result, Is.EqualTo(expected));
   }
 
+  [TestCase("L1", 0)]
+  [TestCase("R1", 0)]
+  [TestCase("L50", 1)]
+  [TestCase("R50", 1)]
+  [TestCase("L150", 2)]
+  [TestCase("R150", 2)]
+  [TestCase("L151", 2)]
+  [TestCase("R151", 2)]
+  public void SolveSafePassword_Given0x434C49434BMethod_ReturnsCorrectClicks(string rotation, int expectedClicks)
+  {
+    var rotations = new List<string>()
+    {
+      rotation
+    };
+
+    var result = SafeBreaker.SolveSafePassword(rotations);
+
+    Assert.That(result, Is.EqualTo(expectedClicks));
+  }
 }

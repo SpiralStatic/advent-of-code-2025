@@ -9,14 +9,33 @@ public partial class SafeBreaker
     return await File.ReadAllLinesAsync(path);
   }
 
-  public static int SolveSafePassword(IEnumerable<string> rotations)
+  public static int SolveSafePassword(IEnumerable<string> rotations, PasswordMethod passwordMethod = PasswordMethod.Default)
   {
-    var clicks = CalculateDialClicks(rotations);
+    var clicks = passwordMethod == PasswordMethod._0x434C49434 ? CalculateDialClicks0x434C49434B(rotations) : CalculateDialClicks(rotations);
 
     return clicks;
   }
 
   private static int CalculateDialClicks(IEnumerable<string> rotations)
+  {
+    var (_finalDialPosition, clicks) = rotations.Aggregate((50, 0), (current, next) =>
+    {
+      var directionDistance = RotationsRegex().Split(next);
+
+      var (direction, distance) = CreateDirectionDistanceTuple(directionDistance);
+
+      var (currentDialPosition, currentClicks) = current;
+
+      var nextDialPosition = direction == 'L' ? currentDialPosition - distance : currentDialPosition + distance;
+      var nextClicks = nextDialPosition % 100 == 0 ? currentClicks + 1 : currentClicks;
+
+      return (nextDialPosition, nextClicks);
+    });
+
+    return clicks;
+  }
+
+  private static int CalculateDialClicks0x434C49434B(IEnumerable<string> rotations)
   {
     var (_finalDialPosition, clicks) = rotations.Aggregate((50, 0), (current, next) =>
     {
