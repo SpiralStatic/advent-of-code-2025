@@ -9,16 +9,16 @@ public partial class SafeBreaker
     return await File.ReadAllLinesAsync(path);
   }
 
-  public static int SolveSafePassword(List<string> rotations)
+  public static int SolveSafePassword(IEnumerable<string> rotations)
   {
     var clicks = CalculateDialClicks(rotations);
 
     return clicks;
   }
 
-  private static int CalculateDialClicks(List<string> rotations)
+  private static int CalculateDialClicks(IEnumerable<string> rotations)
   {
-    var (_, clicks) = rotations.Aggregate((50, 0), (current, next) =>
+    var (_finalDialPosition, clicks) = rotations.Aggregate((50, 0), (current, next) =>
     {
       var directionDistance = RotationsRegex().Split(next);
 
@@ -29,20 +29,16 @@ public partial class SafeBreaker
       if (direction == 'L')
       {
         var nextDialPosition = currentDialPosition - distance;
-        if (nextDialPosition < 0)
-        {
-          return (0 - nextDialPosition, currentClicks + 1);
-        }
-        return (nextDialPosition, currentClicks);
+        var click = nextDialPosition % 100 == 0;
+
+        return (nextDialPosition, click ? currentClicks + 1 : currentClicks);
       }
       else
       {
         var nextDialPosition = currentDialPosition + distance;
-        if (nextDialPosition > 99)
-        {
-          return (nextDialPosition, currentClicks + 1);
-        }
-        return (99 + nextDialPosition, currentClicks);
+        var click = nextDialPosition % 100 == 0;
+
+        return (nextDialPosition, click ? currentClicks + 1 : currentClicks);
       }
     });
 
@@ -60,6 +56,7 @@ public partial class SafeBreaker
     var distanceSuccess = int.TryParse(directionDistance[1], out int distance);
 
     if (!directionSuccess) throw new FormatException("Invalid Direction, not a char");
+    if (direction != 'L' && direction != 'R') throw new FormatException("Invalid Direction, not L or R");
     if (!distanceSuccess) throw new FormatException("Invalid Distance, not an int");
 
     return (direction, distance);

@@ -30,4 +30,83 @@ public class Tests
 
     Assert.That(result, Is.EqualTo(expected));
   }
+
+  [Test]
+  public void SolveSafePassword_GivenLargeLeftRotation_ReturnsCorrectClicks()
+  {
+    var expected = 0;
+
+    var rotations = new List<string>()
+    {
+      "L151",
+    };
+
+    var result = SafeBreaker.SolveSafePassword(rotations);
+
+    Assert.That(result, Is.EqualTo(expected));
+  }
+
+  [Test]
+  public void SolveSafePassword_GivenLargeRightRotation_ReturnsCorrectClicks()
+  {
+    var expected = 0;
+
+    var rotations = new List<string>()
+    {
+      "R151",
+    };
+
+    var result = SafeBreaker.SolveSafePassword(rotations);
+
+    Assert.That(result, Is.EqualTo(expected));
+  }
+
+  [Test]
+  public void SolveSafePassword_GivenSmallLeftRotation_ReturnsCorrectClicks()
+  {
+    var expected = 0;
+
+    var rotations = new List<string>()
+    {
+      "L1",
+    };
+
+    var result = SafeBreaker.SolveSafePassword(rotations);
+
+    Assert.That(result, Is.EqualTo(expected));
+  }
+
+  [Test]
+  public void SolveSafePassword_GivenSmallRotation_ReturnsCorrectClicks()
+  {
+    var expected = 0;
+
+    var rotations = new List<string>()
+    {
+      "R1",
+    };
+
+    var result = SafeBreaker.SolveSafePassword(rotations);
+
+    Assert.That(result, Is.EqualTo(expected));
+  }
+
+  [TestCase("L50")]
+  [TestCase("R50")]
+  [TestCase("L150")]
+  [TestCase("R150")]
+  public void SolveSafePassword_GivenRotationLandingOnZero_ReturnsCorrectClicks(string rotation)
+  {
+    var expected = 1;
+
+    var rotations = new List<string>()
+    {
+      rotation
+    };
+
+    var result = SafeBreaker.SolveSafePassword(rotations);
+
+    Assert.That(result, Is.EqualTo(expected));
+  }
+
 }
