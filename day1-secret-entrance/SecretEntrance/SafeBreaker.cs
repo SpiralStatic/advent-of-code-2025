@@ -26,20 +26,10 @@ public partial class SafeBreaker
 
       var (currentDialPosition, currentClicks) = current;
 
-      if (direction == 'L')
-      {
-        var nextDialPosition = currentDialPosition - distance;
-        var click = nextDialPosition % 100 == 0;
+      var nextDialPosition = direction == 'L' ? currentDialPosition - distance : currentDialPosition + distance;
+      var nextClicks = nextDialPosition % 100 == 0 ? currentClicks + 1 : currentClicks;
 
-        return (nextDialPosition, click ? currentClicks + 1 : currentClicks);
-      }
-      else
-      {
-        var nextDialPosition = currentDialPosition + distance;
-        var click = nextDialPosition % 100 == 0;
-
-        return (nextDialPosition, click ? currentClicks + 1 : currentClicks);
-      }
+      return (nextDialPosition, nextClicks);
     });
 
     return clicks;
