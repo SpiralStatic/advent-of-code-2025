@@ -109,6 +109,30 @@ public class Tests
     Assert.That(result, Is.EqualTo(expected));
   }
 
+  [Test]
+  public void SolveSafePassword_Given0x434C49434BMethod_ReturnsCorrectPassword()
+  {
+    var expected = 6;
+
+    var rotations = new List<string>()
+    {
+      "L68",
+      "L30",
+      "R48",
+      "L5",
+      "R60",
+      "L55",
+      "L1",
+      "L99",
+      "R14",
+      "L82",
+    };
+
+    var result = SafeBreaker.SolveSafePassword(rotations, PasswordMethod._0x434C49434);
+
+    Assert.That(result, Is.EqualTo(expected));
+  }
+
   [TestCase("L1", 0)]
   [TestCase("R1", 0)]
   [TestCase("L50", 1)]
@@ -124,7 +148,7 @@ public class Tests
       rotation
     };
 
-    var result = SafeBreaker.SolveSafePassword(rotations);
+    var result = SafeBreaker.SolveSafePassword(rotations, PasswordMethod._0x434C49434);
 
     Assert.That(result, Is.EqualTo(expectedClicks));
   }
