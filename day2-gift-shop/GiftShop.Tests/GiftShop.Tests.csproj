@@ -28,6 +28,10 @@
   <ItemGroup>
     <Content Include="example.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+
+    <Content Include="largerange.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>  
   </ItemGroup>
 </Project>

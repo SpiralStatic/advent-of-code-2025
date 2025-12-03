@@ -1,10 +1,8 @@
-using System.Text.RegularExpressions;
-
 namespace GiftShop;
 
 public class ProductIdVerifier
 {
-  public static async Task<IEnumerable<Range>> ReadProductIds(string path)
+  public static async Task<IEnumerable<(long start, long end)>> ReadProductIds(string path)
   {
     var lines = await File.ReadAllLinesAsync(path);
     return lines
@@ -14,15 +12,15 @@ public class ProductIdVerifier
       {
         var startEnd = range.Split("-");
         // No validation
-        return new Range(int.Parse(startEnd[0]), int.Parse(startEnd[1]));
+        return (long.Parse(startEnd[0]), long.Parse(startEnd[1]));
       });
   }
 
-  public static IEnumerable<int> FindInvalidIds(IEnumerable<Range> ranges)
+  public static IEnumerable<long> FindInvalidIds(IEnumerable<(long start, long end)> ranges)
   {
     return ranges.SelectMany(range =>
     {
-      return Enumerable.Range(range.Start.Value, range.End.Value - range.Start.Value + 1) // + 1 as the end of the range is exclusive
+      return CreateRange(range.start, range.end - range.start + 1) // + 1 as the end of the range is exclusive
         .Where(num => CheckStringNum(num.ToString()));
     });
   }
@@ -43,8 +41,19 @@ public class ProductIdVerifier
     return front == back;
   }
 
-  public static int GetTotal(IEnumerable<int> invalidIds)
+  public static long GetTotal(IEnumerable<long> invalidIds)
   {
     return invalidIds.Sum();
+  }
+
+  private static IEnumerable<long> CreateRange(long start, long count)
+  {
+    var limit = start + count;
+
+    while (start < limit)
+    {
+      yield return start;
+      start++;
+    }
   }
 }
