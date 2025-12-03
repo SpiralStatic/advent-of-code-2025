@@ -16,12 +16,12 @@ public class ProductIdVerifier
       });
   }
 
-  public static IEnumerable<long> FindInvalidIds(IEnumerable<(long start, long end)> ranges)
+  public static IEnumerable<long> FindInvalidIds(IEnumerable<(long start, long end)> ranges, bool part2 = false)
   {
     return ranges.SelectMany(range =>
     {
       return CreateRange(range.start, range.end - range.start + 1) // + 1 as the end of the range as it is exclusive
-        .Where(num => CheckStringNum(num.ToString()));
+        .Where(num => part2 ? CheckStringRepeatAtLeastTwice(num.ToString()) : CheckStringNumRepeatTwice(num.ToString()));
     });
   }
 
@@ -30,14 +30,35 @@ public class ProductIdVerifier
     return invalidIds.Sum();
   }
 
-  private static bool CheckStringNum(string stringnum)
+  private static bool CheckStringNumRepeatTwice(string stringNum)
   {
-    if (stringnum.Length % 2 != 0) return false; // To mirror length needs to be a multiple of two
+    if (stringNum.Length % 2 != 0) return false; // To mirror length needs to be a multiple of two
 
-    var front = stringnum.Substring(0, stringnum.Length / 2);
-    var back = stringnum.Substring(stringnum.Length / 2, stringnum.Length / 2);
-    
+    var front = stringNum.Substring(0, stringNum.Length / 2);
+    var back = stringNum.Substring(stringNum.Length / 2, stringNum.Length / 2);
+
     return front == back;
+  }
+
+  private static bool CheckStringRepeatAtLeastTwice(string stringNum)
+  {
+    var divisibles = new List<int>();
+    for (int i = 1; i <= stringNum.Length; i++) // i = 2 as we don't care about divisible by one
+    {
+      if (stringNum.Length % i == 0) divisibles.Add(i);
+    }
+
+    var a = divisibles.Any(divisor =>
+    {
+      var parts = Enumerable.Range(0, stringNum.Length / divisor)
+        .Select(i => stringNum.Substring(i * divisor, divisor));
+
+      var result = parts.Count() > 1 && parts.All(x => x == parts.First());
+
+      return result;
+    });
+
+    return a;
   }
 
   private static IEnumerable<long> CreateRange(long start, long count)
