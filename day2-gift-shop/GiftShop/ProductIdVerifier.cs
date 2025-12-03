@@ -43,22 +43,18 @@ public class ProductIdVerifier
   private static bool CheckStringRepeatAtLeastTwice(string stringNum)
   {
     var divisibles = new List<int>();
-    for (int i = 1; i <= stringNum.Length; i++) // i = 2 as we don't care about divisible by one
+    for (int i = 1; i <= stringNum.Length; i++)
     {
       if (stringNum.Length % i == 0) divisibles.Add(i);
     }
 
-    var a = divisibles.Any(divisor =>
+    return divisibles.Any(divisor =>
     {
       var parts = Enumerable.Range(0, stringNum.Length / divisor)
         .Select(i => stringNum.Substring(i * divisor, divisor));
 
-      var result = parts.Count() > 1 && parts.All(x => x == parts.First());
-
-      return result;
+      return parts.Count() > 1 && parts.All(x => x == parts.First());
     });
-
-    return a;
   }
 
   private static IEnumerable<long> CreateRange(long start, long count)
