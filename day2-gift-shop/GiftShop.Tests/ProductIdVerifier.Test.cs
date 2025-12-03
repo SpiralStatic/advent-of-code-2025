@@ -8,7 +8,7 @@ public class Tests
     }
 
     [Test]
-    public void ReadProductIds_GivenExampleFile_ReturnsExpectedRanges()
+    public async Task ReadProductIds_GivenExampleFile_ReturnsExpectedRanges()
     {
         var expectedRanges = new List<Range> {
             11..22,
@@ -26,7 +26,7 @@ public class Tests
 
         var path = "./example.txt";
         
-        var ranges = ProductIdVerifier.ReadProductIds(path);
+        var ranges = await ProductIdVerifier.ReadProductIds(path);
 
         Assert.That(ranges, Is.EquivalentTo(expectedRanges));
     }
