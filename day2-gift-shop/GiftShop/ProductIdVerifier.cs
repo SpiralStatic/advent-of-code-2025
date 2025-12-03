@@ -20,9 +20,14 @@ public class ProductIdVerifier
   {
     return ranges.SelectMany(range =>
     {
-      return CreateRange(range.start, range.end - range.start + 1) // + 1 as the end of the range is exclusive
+      return CreateRange(range.start, range.end - range.start + 1) // + 1 as the end of the range as it is exclusive
         .Where(num => CheckStringNum(num.ToString()));
     });
+  }
+
+  public static long GetTotal(IEnumerable<long> invalidIds)
+  {
+    return invalidIds.Sum();
   }
 
   private static bool CheckStringNum(string stringnum)
@@ -31,19 +36,8 @@ public class ProductIdVerifier
 
     var front = stringnum.Substring(0, stringnum.Length / 2);
     var back = stringnum.Substring(stringnum.Length / 2, stringnum.Length / 2);
-
-    var canDivideFurther = stringnum.Length / 2 > 1;
-    if (front != back && canDivideFurther)
-    {
-      return CheckStringNum(stringnum.Substring(0, stringnum.Length / 2));
-    }
-
+    
     return front == back;
-  }
-
-  public static long GetTotal(IEnumerable<long> invalidIds)
-  {
-    return invalidIds.Sum();
   }
 
   private static IEnumerable<long> CreateRange(long start, long count)
