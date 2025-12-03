@@ -15,4 +15,14 @@ public class ProductIdVerifier
         return new Range(int.Parse(range[0]), int.Parse(range[1]));
       });
   }
+
+  public static IEnumerable<int> FindInvalidIds(IEnumerable<Range> ranges)
+  {
+    return [0];
+  }
+
+  public static int GetTotal(IEnumerable<int> invalidIds)
+  {
+    return invalidIds.Sum();
+  }
 }
