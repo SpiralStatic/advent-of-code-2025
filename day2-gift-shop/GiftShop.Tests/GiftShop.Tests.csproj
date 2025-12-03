@@ -25,4 +25,9 @@
     <ProjectReference Include="..\GiftShop\GiftShop.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>  
+  </ItemGroup>
 </Project>
